@@ -21,8 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.0"
-            android:orientation="vertical"
-            android:gravity="end">
+            android:gravity="end"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/input"
@@ -30,13 +30,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:background="@android:color/transparent"
+                android:cursorVisible="true"
                 android:inputType="textMultiLine"
-                android:paddingBottom="15dp"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
+                android:paddingBottom="15dp"
                 android:textColor="#ffFFEFBB"
-                android:minWidth="50dp"
-                android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/colorcursor"
                 android:textSize="45dp" />
         </LinearLayout>
@@ -46,22 +45,22 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.25"
-            android:orientation="vertical"
-            android:gravity="end|top">
+            android:gravity="end|top"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/output"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
+                android:gravity="top"
                 android:inputType="textMultiLine"
                 android:maxHeight="40dp"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
+                android:textAlignment="gravity"
                 android:textColor="#ff909090"
-                android:textSize="30dp"
-                android:gravity="top"
-                android:textAlignment="gravity"/>
+                android:textSize="30dp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -74,62 +73,89 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/buttonsSubLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-            <Button
-                android:id="@+id/history"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:text="History"
-                android:textColor="@android:color/transparent"
-                android:textSize="15dp" />
+                android:paddingTop="10dp">
 
-            <Button
-                android:id="@+id/hideOrShow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:text="hide"
-                android:textColor="@color/toolsbutton"
-                android:textSize="15dp" />
+                <Button
+                    android:id="@+id/history"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:text="History"
+                    android:textColor="@android:color/transparent"
+                    android:textSize="15dp" />
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/copyAns"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:text="copy ans"
-                android:textColor="@color/toolsbutton"
-                android:textSize="15dp" />
+                android:paddingTop="10dp">
 
-            <Button
-                android:id="@+id/erase"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <Button
+                    android:id="@+id/hideOrShow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:text="hide"
+                    android:textColor="@color/toolsbutton"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:longClickable="true"
-                android:maxHeight="10dp"
-                android:text="ᐊ"
-                android:textColor="@color/toolsbutton"
-                android:textSize="40dp" />
+                android:paddingTop="10dp">
+
+                <Button
+                    android:id="@+id/copyAns"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:text="copy ans"
+                    android:textColor="@color/toolsbutton"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/eraseLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingBottom="5dp">
+
+                <Button
+                    android:id="@+id/erase"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:longClickable="true"
+                    android:text="ᐊ"
+                    android:textColor="@color/toolsbutton"
+                    android:textSize="40dp" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <TableLayout
             android:id="@+id/tableLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp">
 
-            <TableRow
-                android:layout_weight="1">
+            <TableRow android:layout_weight="1">
 
                 <Button
                     android:id="@+id/clear"
@@ -172,8 +198,7 @@
                     android:textSize="25dp" />
             </TableRow>
 
-            <TableRow
-                android:layout_weight="1">
+            <TableRow android:layout_weight="1">
 
                 <Button
                     android:id="@+id/seven"
@@ -217,8 +242,7 @@
 
             </TableRow>
 
-            <TableRow
-                android:layout_weight="1">
+            <TableRow android:layout_weight="1">
 
                 <Button
                     android:id="@+id/four"
@@ -262,8 +286,7 @@
 
             </TableRow>
 
-            <TableRow
-                android:layout_weight="1">
+            <TableRow android:layout_weight="1">
 
                 <Button
                     android:id="@+id/one"
@@ -307,8 +330,7 @@
 
             </TableRow>
 
-            <TableRow
-                android:layout_weight="1">
+            <TableRow android:layout_weight="1">
 
                 <Button
                     android:id="@+id/negate"

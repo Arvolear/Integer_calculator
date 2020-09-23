@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import java.util.concurrent.ExecutorService;
@@ -33,6 +35,11 @@ public class Controller implements View.OnClickListener, View.OnLongClickListene
     {
         this.mainActivity = mainActivity;
 
+        this.input = input;
+        this.output = output;
+
+        configTextSize();
+
         adder = new Adder(mainActivity, input, output);
         solver = null;
         eraser = new Eraser(mainActivity, input, output);
@@ -42,12 +49,47 @@ public class Controller implements View.OnClickListener, View.OnLongClickListene
         outputBlocker = new OutputBlocker(mainActivity, input, output);
 
         service = null;
-
-        this.input = input;
-        this.output = output;
     }
 
-    void copyAns()
+    private void configTextSize()
+    {
+        final LinearLayout mainLayout = mainActivity.findViewById(R.id.mainLayout);
+
+        mainLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int inputTextSize = mainLayout.getWidth() / 24;
+                int outputTextSize = mainLayout.getWidth() / 36;
+                int textTextSize = mainLayout.getWidth() / 72;
+                int buttonTextSize = mainLayout.getWidth() / 43;
+
+                int eraseTextSize = mainLayout.getHeight() / 48;
+
+                input.setTextSize(Math.max(35, inputTextSize));
+                output.setTextSize(Math.max(25, outputTextSize));
+
+                ((Button)mainActivity.findViewById(R.id.history)).setTextSize(Math.max(12, textTextSize));
+                ((Button)mainActivity.findViewById(R.id.hideOrShow)).setTextSize(Math.max(12, textTextSize));
+                ((Button)mainActivity.findViewById(R.id.copyAns)).setTextSize(Math.max(12, textTextSize));
+                ((Button)mainActivity.findViewById(R.id.erase)).setTextSize(Math.max(30, eraseTextSize));
+
+
+                TableLayout table = mainActivity.findViewById(R.id.tableLayout);
+
+                for (int i = 0; i < table.getChildCount(); i++)
+                {
+                    for (int j = 0; j < ((TableRow)table.getChildAt(i)).getChildCount(); j++)
+                    {
+                        ((Button) ((TableRow) table.getChildAt(i)).getChildAt(j)).setTextSize(Math.max(17, buttonTextSize));
+                    }
+                }
+            }
+        });
+    }
+
+    public void copyAns()
     {
         ClipboardManager clipboard = (ClipboardManager) mainActivity.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("answer", output.getText().toString());

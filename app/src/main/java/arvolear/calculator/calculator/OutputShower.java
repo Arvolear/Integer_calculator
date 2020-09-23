@@ -1,6 +1,5 @@
 package arvolear.calculator.calculator;
 
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,14 +20,15 @@ public class OutputShower
     private boolean showed;
 
     private int duration;
-    private float extentKey;
+    private float extentBut;
     private float extentOut;
-    private float leftStride;
+    private int leftStride;
 
-    OutputShower(MainActivity mainActivity)
+    OutputShower(final MainActivity mainActivity)
     {
         this.mainActivity = mainActivity;
 
+        final LinearLayout mainLayout = mainActivity.findViewById(R.id.mainLayout);
         this.buttonsLayout = mainActivity.findViewById(R.id.buttonsLayout);
         this.outputLayout = mainActivity.findViewById(R.id.outputLayout);
         this.tableLayout = mainActivity.findViewById(R.id.tableLayout);
@@ -39,9 +39,17 @@ public class OutputShower
         this.showed = true;
 
         this.duration = 800;
-        this.extentKey = -1.37f;
-        this.extentOut = -2.85f;
-        this.leftStride = 400;
+
+        this.buttonsLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                leftStride = buttonsLayout.getWidth();
+                extentBut = -((float)mainLayout.getHeight() / (float)buttonsLayout.getHeight()) / 1.22f;
+                extentOut = extentBut * 2.7f;
+            }
+        });
     }
 
     private void startHide(View view, float extent)
@@ -58,26 +66,22 @@ public class OutputShower
         view.startAnimation(new WeightAnimation(view, duration, params.weight, -extent));
     }
 
-    private void startHide2(View view)
+    private void startHideCalcButtons(View view)
     {
-        int pxTo = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, leftStride, mainActivity.getResources().getDisplayMetrics());
-
         view.startAnimation(new MoveAnimation(view,
                 duration,
                 (int)view.getX(),
-                -pxTo,
+                -leftStride,
                 (int)view.getY(),
                 0));
     }
 
-    private void startShow2(View view)
+    private void startShowCalcButtons(View view)
     {
-        int pxTo = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, leftStride, mainActivity.getResources().getDisplayMetrics());
-
         view.startAnimation(new MoveAnimation(view,
                 duration,
                 (int)view.getX(),
-                pxTo,
+                leftStride,
                 (int)view.getY(),
                 0));
     }
@@ -86,16 +90,16 @@ public class OutputShower
     {
         if (showed)
         {
-            startHide(buttonsLayout, extentKey);
-            startHide2(tableLayout);
+            startHide(buttonsLayout, extentBut);
+            startHideCalcButtons(tableLayout);
             startShow(outputLayout, Math.max(extentOut, -(float)(output.getLineCount() * 0.25)));
 
             hider.setText("Show");
         }
         else
         {
-            startShow(buttonsLayout, extentKey);
-            startShow2(tableLayout);
+            startShow(buttonsLayout, extentBut);
+            startShowCalcButtons(tableLayout);
             startHide(outputLayout, Math.max(extentOut, -(float)(output.getLineCount() * 0.25)));
 
             hider.setText("Hide");

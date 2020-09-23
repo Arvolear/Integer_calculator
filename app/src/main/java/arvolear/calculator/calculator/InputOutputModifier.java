@@ -1,6 +1,5 @@
 package arvolear.calculator.calculator;
 
-import android.view.Gravity;
 import android.widget.EditText;
 
 public class InputOutputModifier
