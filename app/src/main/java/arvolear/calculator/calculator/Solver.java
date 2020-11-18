@@ -39,7 +39,12 @@ public class Solver extends InputOutputModifier implements Runnable
     {
         switch (symbol)
         {
-            case '!':
+            case 'N':
+            {
+                return 5;
+            }
+
+            case 'F':
             {
                 return 4;
             }
@@ -70,9 +75,13 @@ public class Solver extends InputOutputModifier implements Runnable
     {
         switch (op)
         {
-            case '!':
+            case 'N':
             {
                 return a.negate();
+            }
+            case 'F':
+            {
+                return factorial(a.intValue());
             }
             case '^':
             {
@@ -162,6 +171,11 @@ public class Solver extends InputOutputModifier implements Runnable
                     {
                         throw new Exception(")[0-9(]");
                     }
+
+                    if (i < expr.length() - 1 && expr.charAt(i) == '!' && Character.toString(expr.charAt(i + 1)).matches("[0-9\\(!]"))
+                    {
+                        throw new Exception("![0-9(!]");
+                    }
                 }
             }
 
@@ -208,7 +222,7 @@ public class Solver extends InputOutputModifier implements Runnable
 
                     BigInteger res = new BigInteger(val.toString());
 
-                    while (!ops.isEmpty() && ops.get(ops.size() - 1) == '!')
+                    while (!ops.isEmpty() && ops.get(ops.size() - 1) == 'N')
                     {
                         ops.remove(ops.size() - 1);
                         res = res.negate();
@@ -223,18 +237,23 @@ public class Solver extends InputOutputModifier implements Runnable
                         char op = ops.get(ops.size() - 1);
                         ops.remove(ops.size() - 1);
 
-                        if (op == '!')
+                        if (op != 'F')
                         {
-                            throw new Exception("negation");
+                            BigInteger right = values.get(values.size() - 1);
+                            values.remove(values.size() - 1);
+
+                            BigInteger left = values.get(values.size() - 1);
+                            values.remove(values.size() - 1);
+
+                            values.add(calculate(left, right, op));
                         }
+                        else
+                        {
+                            BigInteger right = values.get(values.size() - 1);
+                            values.remove(values.size() - 1);
 
-                        BigInteger right = values.get(values.size() - 1);
-                        values.remove(values.size() - 1);
-
-                        BigInteger left = values.get(values.size() - 1);
-                        values.remove(values.size() - 1);
-
-                        values.add(calculate(left, right, op));
+                            values.add(calculate(right, right, op));
+                        }
                     }
 
                     BigInteger res;
@@ -248,7 +267,7 @@ public class Solver extends InputOutputModifier implements Runnable
                         ops.remove(ops.size() - 1);
                     }
 
-                    while (!ops.isEmpty() && ops.get(ops.size() - 1) == '!')
+                    while (!ops.isEmpty() && ops.get(ops.size() - 1) == 'N')
                     {
                         ops.remove(ops.size() - 1);
                         res = res.negate();
@@ -259,23 +278,40 @@ public class Solver extends InputOutputModifier implements Runnable
                 // operator
                 else
                 {
-                    if (expr.charAt(i) == '-' && (i == 0 || Character.toString(expr.charAt(i - 1)).matches("[^0-9\\)]")))
+                    if (expr.charAt(i) == '-' && (i == 0 || Character.toString(expr.charAt(i - 1)).matches("[^0-9\\)!F]")))
                     {
-                        expr = expr.substring(0, i) + "!" + expr.substring(i + 1);
+                        expr = expr.substring(0, i) + "N" + expr.substring(i + 1);
                     }
 
-                    while (!ops.isEmpty() && priority(ops.get(ops.size() - 1)) >= priority(expr.charAt(i)) && ops.get(ops.size() - 1) != '!')
+                    if (expr.charAt(i) == '!')
+                    {
+                        expr = expr.substring(0, i) + "F" + expr.substring(i + 1);
+                    }
+
+                    while (!ops.isEmpty() &&
+                            priority(ops.get(ops.size() - 1)) >= priority(expr.charAt(i)) &&
+                            ops.get(ops.size() - 1) != 'N')
                     {
                         char op = ops.get(ops.size() - 1);
                         ops.remove(ops.size() - 1);
 
-                        BigInteger right = values.get(values.size() - 1);
-                        values.remove(values.size() - 1);
+                        if (op != 'F')
+                        {
+                            BigInteger right = values.get(values.size() - 1);
+                            values.remove(values.size() - 1);
 
-                        BigInteger left = values.get(values.size() - 1);
-                        values.remove(values.size() - 1);
+                            BigInteger left = values.get(values.size() - 1);
+                            values.remove(values.size() - 1);
 
-                        values.add(calculate(left, right, op));
+                            values.add(calculate(left, right, op));
+                        }
+                        else
+                        {
+                            BigInteger right = values.get(values.size() - 1);
+                            values.remove(values.size() - 1);
+
+                            values.add(calculate(right, right, op));
+                        }
                     }
 
                     ops.add(expr.charAt(i));
@@ -287,7 +323,14 @@ public class Solver extends InputOutputModifier implements Runnable
                 char op = ops.get(ops.size() - 1);
                 ops.remove(ops.size() - 1);
 
-                if (op == '!')
+                if (op == 'N')
+                {
+                    BigInteger right = values.get(values.size() - 1);
+                    values.remove(values.size() - 1);
+
+                    values.add(calculate(right, right, op));
+                }
+                else if (op == 'F')
                 {
                     BigInteger right = values.get(values.size() - 1);
                     values.remove(values.size() - 1);
@@ -319,6 +362,23 @@ public class Solver extends InputOutputModifier implements Runnable
         {
             setOutputText("Error");
         }
+    }
+
+    private BigInteger factorial(int fact) throws Exception
+    {
+        if (fact < 0)
+        {
+            throw new Exception("factorial < 0");
+        }
+
+        BigInteger res = BigInteger.ONE;
+
+        for (int i = fact; i >= 1; i--)
+        {
+            res = res.multiply(BigInteger.valueOf(i));
+        }
+
+        return res;
     }
 
     @Override

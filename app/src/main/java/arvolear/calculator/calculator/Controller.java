@@ -70,7 +70,7 @@ public class Controller implements View.OnClickListener, View.OnLongClickListene
                 input.setTextSize(Math.max(35, inputTextSize));
                 output.setTextSize(Math.max(25, outputTextSize));
 
-                ((Button)mainActivity.findViewById(R.id.history)).setTextSize(Math.max(12, textTextSize));
+                ((Button)mainActivity.findViewById(R.id.clear)).setTextSize(Math.max(30, textTextSize));
                 ((Button)mainActivity.findViewById(R.id.hideOrShow)).setTextSize(Math.max(12, textTextSize));
                 ((Button)mainActivity.findViewById(R.id.copyAns)).setTextSize(Math.max(12, textTextSize));
                 ((Button)mainActivity.findViewById(R.id.erase)).setTextSize(Math.max(30, eraseTextSize));
@@ -115,6 +115,7 @@ public class Controller implements View.OnClickListener, View.OnLongClickListene
             case R.id.eight:
             case R.id.nine:
 
+            case R.id.factorial:
             case R.id.add:
             case R.id.subtract:
             case R.id.multiply:

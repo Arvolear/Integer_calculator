@@ -14,6 +14,8 @@ public class OutputShower
     private LinearLayout outputLayout;
     private TableLayout tableLayout;
 
+    private int lineCount;
+
     private EditText output;
     private Button hider;
 
@@ -90,9 +92,11 @@ public class OutputShower
     {
         if (showed)
         {
+            lineCount = output.getLineCount();
+
             startHide(buttonsLayout, extentBut);
             startHideCalcButtons(tableLayout);
-            startShow(outputLayout, Math.max(extentOut, -(float)(output.getLineCount() * 0.25)));
+            startShow(outputLayout, Math.max(extentOut, -(float)(lineCount * 0.25)));
 
             hider.setText("Show");
         }
@@ -100,7 +104,7 @@ public class OutputShower
         {
             startShow(buttonsLayout, extentBut);
             startShowCalcButtons(tableLayout);
-            startHide(outputLayout, Math.max(extentOut, -(float)(output.getLineCount() * 0.25)));
+            startHide(outputLayout, Math.max(extentOut, -(float)(lineCount * 0.25)));
 
             hider.setText("Hide");
         }

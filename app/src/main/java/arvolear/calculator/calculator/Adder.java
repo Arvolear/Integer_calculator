@@ -1,5 +1,6 @@
 package arvolear.calculator.calculator;
 
+import android.util.Log;
 import android.widget.EditText;
 
 public class Adder extends InputOutputModifier
@@ -38,7 +39,7 @@ public class Adder extends InputOutputModifier
             // closed brace -> multiply and number
             if (pos > 0 && to.charAt(pos - 1) == ')')
             {
-                String newTo = "";
+                String newTo;
 
                 if (pos < to.length() && Character.toString(to.charAt(pos)).matches("[0-9]"))
                 {
@@ -57,6 +58,13 @@ public class Adder extends InputOutputModifier
                 }
 
                 newTo = to.substring(0, pos) + "\u00D7" + to.substring(pos);
+
+                return new Pair(newTo, true, pos + 1);
+            }
+
+            if (pos > 0 && to.charAt(pos - 1) == '!')
+            {
+                String newTo = to.substring(0, pos) + "\u00D7" + to.substring(pos);
 
                 return new Pair(newTo, true, pos + 1);
             }
@@ -205,15 +213,39 @@ public class Adder extends InputOutputModifier
                 return new Pair(to, false, pos);
             }
 
+            if (Character.toString(to.charAt(pos - 1)).matches("!"))
+            {
+                if (what.matches("!"))
+                {
+                    return new Pair(to, false, pos);
+                }
+                else
+                {
+                    if (pos < to.length() && Character.toString(to.charAt(pos)).matches("[^0-9\\(\\)]"))
+                    {
+                        String newTo = to.substring(0, pos) + to.substring(pos + 1);
+
+                        return new Pair(newTo, true, pos);
+                    }
+
+                    return new Pair(to, true, pos);
+                }
+            }
+
             // number before -> true
             if (Character.toString(to.charAt(pos - 1)).matches("[0-9\\)]"))
             {
-                // operator after -> false
-                if (pos < to.length() && Character.toString(to.charAt(pos)).matches("[^0-9\\(\\)]"))
+                // operator after -> true (replace)
+                if (!what.matches("!") && pos < to.length() && Character.toString(to.charAt(pos)).matches("[^0-9\\(\\)]"))
                 {
                     String newTo = to.substring(0, pos) + to.substring(pos + 1);
 
                     return new Pair(newTo, true, pos);
+                }
+
+                if (what.matches("!") && pos < to.length() && Character.toString(to.charAt(pos)).matches("!"))
+                {
+                    return new Pair(to, false, pos);
                 }
 
                 int nonZero = to.length();
@@ -289,9 +321,11 @@ public class Adder extends InputOutputModifier
             return "(";
         }
 
+        boolean prevBraceOrNum = to.charAt(pos - 1) == ')' || Character.toString(to.charAt(pos - 1)).matches("[0-9!]");
+
         if (beforeOpened == 0)
         {
-            if (to.charAt(pos - 1) == ')' || Character.toString(to.charAt(pos - 1)).matches("[0-9]"))
+            if (prevBraceOrNum)
             {
                 return "\u00D7(";
             }
@@ -302,7 +336,7 @@ public class Adder extends InputOutputModifier
         }
         else
         {
-            if (to.charAt(pos - 1) == ')' || Character.toString(to.charAt(pos - 1)).matches("[0-9]"))
+            if (prevBraceOrNum)
             {
                 if (pos < to.length() && Character.toString(to.charAt(pos)).matches("[0-9]"))
                 {
@@ -316,6 +350,21 @@ public class Adder extends InputOutputModifier
                 return "(";
             }
         }
+    }
+
+    private String addFactorial(String to, int pos)
+    {
+        if (pos == to.length())
+        {
+            return "!";
+        }
+
+        if (Character.toString(to.charAt(pos)).matches("[0-9]"))
+        {
+            return "!\u00D7";
+        }
+
+        return "!";
     }
 
     void add(String symbols)
@@ -338,6 +387,10 @@ public class Adder extends InputOutputModifier
             if (symbols.matches("\\(  \\)"))
             {
                 sub += addBrace(to, sel);
+            }
+            else if (symbols.matches("!"))
+            {
+                sub += addFactorial(to, sel);
             }
             else
             {
@@ -364,7 +417,7 @@ public class Adder extends InputOutputModifier
         // find left operator
         for (int i = selBeg - 1; i >= 0; i--)
         {
-            if (Character.toString(to.charAt(i)).matches("[^0-9]"))
+            if (Character.toString(to.charAt(i)).matches("[^0-9!]"))
             {
                 leftOperator = i;
                 break;

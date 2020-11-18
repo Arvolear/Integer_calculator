@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity
 
         controller = new Controller(this, input, output);
 
+        findViewById(R.id.clear).setOnClickListener(controller);
+
         findViewById(R.id.erase).setOnTouchListener(controller);
         findViewById(R.id.erase).setOnClickListener(controller);
         findViewById(R.id.erase).setOnLongClickListener(controller);
