@@ -1,6 +1,5 @@
 package arvolear.calculator.calculator;
 
-import android.util.Log;
 import android.widget.EditText;
 
 public class Adder extends InputOutputModifier

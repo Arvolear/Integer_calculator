@@ -90,25 +90,28 @@ public class OutputShower
 
     void toggle()
     {
-        if (showed)
+        if (buttonsLayout.getAnimation() == null || buttonsLayout.getAnimation().hasEnded())
         {
-            lineCount = output.getLineCount();
+            if (showed)
+            {
+                lineCount = output.getLineCount();
 
-            startHide(buttonsLayout, extentBut);
-            startHideCalcButtons(tableLayout);
-            startShow(outputLayout, Math.max(extentOut, -(float)(lineCount * 0.25)));
+                startHide(buttonsLayout, extentBut);
+                startHideCalcButtons(tableLayout);
+                startShow(outputLayout, Math.max(extentOut, -(float) (lineCount * 0.25)));
 
-            hider.setText("Show");
+                hider.setText("Show");
+            }
+            else
+            {
+                startShow(buttonsLayout, extentBut);
+                startShowCalcButtons(tableLayout);
+                startHide(outputLayout, Math.max(extentOut, -(float) (lineCount * 0.25)));
+
+                hider.setText("Hide");
+            }
+
+            showed = !showed;
         }
-        else
-        {
-            startShow(buttonsLayout, extentBut);
-            startShowCalcButtons(tableLayout);
-            startHide(outputLayout, Math.max(extentOut, -(float)(lineCount * 0.25)));
-
-            hider.setText("Hide");
-        }
-
-        showed = !showed;
     }
 }
