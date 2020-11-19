@@ -3,6 +3,9 @@ package arvolear.calculator.calculator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -62,6 +67,7 @@ public class Controller implements View.OnClickListener, View.OnLongClickListene
             {
                 int inputTextSize = mainLayout.getWidth() / 24;
                 int outputTextSize = mainLayout.getWidth() / 36;
+                int clearTextSize = mainLayout.getWidth() / 36;
                 int textTextSize = mainLayout.getWidth() / 72;
                 int buttonTextSize = mainLayout.getWidth() / 43;
 
@@ -70,17 +76,17 @@ public class Controller implements View.OnClickListener, View.OnLongClickListene
                 input.setTextSize(Math.max(35, inputTextSize));
                 output.setTextSize(Math.max(25, outputTextSize));
 
-                ((Button)mainActivity.findViewById(R.id.clear)).setTextSize(Math.max(30, textTextSize));
-                ((Button)mainActivity.findViewById(R.id.hideOrShow)).setTextSize(Math.max(12, textTextSize));
-                ((Button)mainActivity.findViewById(R.id.copyAns)).setTextSize(Math.max(12, textTextSize));
-                ((Button)mainActivity.findViewById(R.id.erase)).setTextSize(Math.max(30, eraseTextSize));
+                ((Button) mainActivity.findViewById(R.id.clear)).setTextSize(Math.max(30, clearTextSize));
+                ((Button) mainActivity.findViewById(R.id.hideOrShow)).setTextSize(Math.max(12, textTextSize));
+                ((Button) mainActivity.findViewById(R.id.copyAns)).setTextSize(Math.max(12, textTextSize));
+                ((Button) mainActivity.findViewById(R.id.erase)).setTextSize(Math.max(30, eraseTextSize));
 
 
                 TableLayout table = mainActivity.findViewById(R.id.tableLayout);
 
                 for (int i = 0; i < table.getChildCount(); i++)
                 {
-                    for (int j = 0; j < ((TableRow)table.getChildAt(i)).getChildCount(); j++)
+                    for (int j = 0; j < ((TableRow) table.getChildAt(i)).getChildCount(); j++)
                     {
                         ((Button) ((TableRow) table.getChildAt(i)).getChildAt(j)).setTextSize(Math.max(17, buttonTextSize));
                     }
@@ -133,6 +139,7 @@ public class Controller implements View.OnClickListener, View.OnLongClickListene
 
             case R.id.clear:
             {
+                vibrate();
                 adder.clear();
                 break;
             }
@@ -161,7 +168,9 @@ public class Controller implements View.OnClickListener, View.OnLongClickListene
                         blockOutput.start();
                     }
                 }
-                catch (InterruptedException e) { }
+                catch (InterruptedException e)
+                {
+                }
 
                 break;
             }
@@ -198,6 +207,20 @@ public class Controller implements View.OnClickListener, View.OnLongClickListene
                 eraser.stopErasing();
                 break;
             }
+        }
+    }
+
+    private void vibrate()
+    {
+        Vibrator v = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            v.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
+        }
+        else
+        {
+            v.vibrate(5);
         }
     }
 

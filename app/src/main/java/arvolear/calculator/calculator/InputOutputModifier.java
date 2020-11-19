@@ -1,6 +1,7 @@
 package arvolear.calculator.calculator;
 
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class InputOutputModifier
 {
@@ -34,7 +35,7 @@ public class InputOutputModifier
             @Override
             public void run()
             {
-                input.setText(text);
+                input.setText(text, TextView.BufferType.EDITABLE);
             }
         });
     }

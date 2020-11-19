@@ -54,7 +54,7 @@ public class Solver extends InputOutputModifier implements Runnable
                 return 3;
             }
 
-            case '/':
+            case '\u00F7':
             case '%':
             case '\u00D7':
             {
@@ -102,7 +102,7 @@ public class Solver extends InputOutputModifier implements Runnable
 
                 return a.pow(b.intValue());
             }
-            case '/':
+            case '\u00F7':
             {
                 return a.divide(b);
             }
@@ -172,9 +172,9 @@ public class Solver extends InputOutputModifier implements Runnable
                         throw new Exception(")[0-9(]");
                     }
 
-                    if (i < expr.length() - 1 && expr.charAt(i) == '!' && Character.toString(expr.charAt(i + 1)).matches("[0-9\\(!]"))
+                    if (i < expr.length() - 1 && expr.charAt(i) == '\u01C3' && Character.toString(expr.charAt(i + 1)).matches("[0-9\\(\u01C3]"))
                     {
-                        throw new Exception("![0-9(!]");
+                        throw new Exception("\u01C3[0-9(\u01C3]");
                     }
                 }
             }
@@ -278,12 +278,12 @@ public class Solver extends InputOutputModifier implements Runnable
                 // operator
                 else
                 {
-                    if (expr.charAt(i) == '-' && (i == 0 || Character.toString(expr.charAt(i - 1)).matches("[^0-9\\)!F]")))
+                    if (expr.charAt(i) == '-' && (i == 0 || Character.toString(expr.charAt(i - 1)).matches("[^0-9\\)\u01C3F]")))
                     {
                         expr = expr.substring(0, i) + "N" + expr.substring(i + 1);
                     }
 
-                    if (expr.charAt(i) == '!')
+                    if (expr.charAt(i) == '\u01C3')
                     {
                         expr = expr.substring(0, i) + "F" + expr.substring(i + 1);
                     }
@@ -355,12 +355,12 @@ public class Solver extends InputOutputModifier implements Runnable
             }
             else
             {
-                setOutputText("Error");
+                setOutputText("Bad expression");
             }
         }
         catch (Exception ex)
         {
-            setOutputText("Error");
+            setOutputText("Bad expression");
         }
     }
 
